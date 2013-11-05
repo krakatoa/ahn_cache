@@ -1,6 +1,5 @@
 module AhnCache
   class Plugin < Adhearsion::Plugin
-    # Actions to perform when the plugin is loaded
 
     BACKENDS = [:ehcache]
 
@@ -15,30 +14,22 @@ module AhnCache
       end
     end
 
-    #
+    config :cache do
+      config = YAML::load_file(File.join(Dir.getwd, "config/cache.yml")) rescue {}
+      cache_config = config[Adhearsion.config.platform.environment.to_s] rescue nil
+
+      if not cache_config
+        $stdout.puts "Ahn-Cache config file is missing."
+      else
+        backend (cache_config["backend"] || "ehcache").to_sym
+        ttl (cache_config["ttl"] || "unlimited")
+      end
+    end
+
     init :ahn_cache do
       logger.warn "AhnCache has been loaded"
 
-      store_klass(:ehcache).supervise_as(:cache)
-    end
-
-    # Basic configuration for the plugin
-    #
-    config :ahn_cache do
-      # greeting "Hello", :desc => "What to use to greet users"
-    end
-
-    # Defining a Rake task is easy
-    # The following can be invoked with:
-    #   rake plugin_demo:info
-    #
-    tasks do
-      namespace :ahn_cache do
-        desc "Prints the PluginTemplate information"
-        task :info do
-          STDOUT.puts "AhnCache plugin v. #{VERSION}"
-        end
-      end
+      store_klass(Adhearsion.config.cache.backend).supervise_as(:cache)
     end
 
   end
