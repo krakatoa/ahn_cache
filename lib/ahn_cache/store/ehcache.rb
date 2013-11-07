@@ -12,13 +12,19 @@ module AhnCache
     end
 
     def fetch(key, options={}, &block)
-      value = block ? block.call : nil
-      
       driver.acquire_write_lock_on_key(key)
-      driver.put(key, value, mapped_options(options))
+      
+      if !options[:force]
+        item = driver.get(key)
 
-      item = driver.get(key)
-      item.value if item
+        value = item.value if item
+        value ||= block ? block.call : nil
+      else
+        value = block ? block.call : nil
+      end
+
+      driver.put(key, value, mapped_options(options))
+      return value
     ensure
       driver.release_write_lock_on_key(key)
     end
