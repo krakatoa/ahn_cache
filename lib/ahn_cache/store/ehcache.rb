@@ -11,22 +11,27 @@ module AhnCache
       item.value if item
     end
 
+    def exists?(key)
+      driver.key_in_cache?(key)
+    end
+
     def fetch(key, options={}, &block)
-      driver.acquire_write_lock_on_key(key)
+      transactional = exists?(key)
+      driver.acquire_write_lock_on_key(key) if transactional
       
       if !options[:force]
         item = driver.get(key)
 
         value = item.value if item
-        value ||= block ? block.call : nil
+        value ||= block ? block.call : nil rescue nil
       else
-        value = block ? block.call : nil
+        value = block ? block.call : nil rescue nil
       end
 
       driver.put(key, value, mapped_options(options))
       return value
     ensure
-      driver.release_write_lock_on_key(key)
+      driver.release_write_lock_on_key(key) if transactional
     end
 
     def flush
