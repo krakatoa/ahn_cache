@@ -15,7 +15,7 @@ module AhnCache
       driver.key_in_cache?(key)
     end
 
-    def fetch(key, options={}, &block)
+    def fetch(key, block, options={})
       transactional = exists?(key)
       driver.acquire_write_lock_on_key(key) if transactional
       
