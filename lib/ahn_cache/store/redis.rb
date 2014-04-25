@@ -4,6 +4,7 @@ module AhnCache
   class RedisStore < Store
     def write(key, value, options={})
       ttl = options[:ttl] || nil
+      value = Marshal.dump(value)
       if ttl
         @cache.setex key, ttl, value
       else
@@ -12,7 +13,8 @@ module AhnCache
     end
 
     def read(key)
-      @cache.get(key)
+      value = @cache.get(key)
+      value ? Marshal.load(value) : nil rescue nil
     end
 
     def exists?(key)
@@ -23,11 +25,9 @@ module AhnCache
       value = read key
       if !value || options[:force]
         value = block ? block.call : nil rescue nil
-        write(key, Marshal.dump(value), mapped_options(options)) if value
-      else
-        value = Marshal.load(value)
+        write(key, value, mapped_options(options)) if value
       end
-      return value
+      value
     end
 
     def flush
