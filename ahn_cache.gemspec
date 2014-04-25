@@ -23,6 +23,8 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency %q<adhearsion>, ["~> 2.4"]
   s.add_runtime_dependency %q<activesupport>, [">= 3.0.10"]
   # s.add_runtime_dependency %q<jruby-ehcache>
+  # s.add_runtime_dependency %q<redis>
+  # s.add_runtime_dependency %q<redis-namespace>
 
   s.add_development_dependency %q<bundler>, ["~> 1.0"]
   s.add_development_dependency %q<rspec>, ["~> 2.5"]

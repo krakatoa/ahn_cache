@@ -1,3 +1,4 @@
 [ ] cache.yml generator
 [ ] configuration protocol
 [ ] cache buckets (1 Store, N Buckets)
+[x] redis support
