@@ -23,7 +23,9 @@ module AhnCache
       value = read key
       if !value || options[:force]
         value = block ? block.call : nil rescue nil
-        write(key, value, mapped_options(options)) if value
+        write(key, Marshal.dump(value), mapped_options(options)) if value
+      else
+        value = Marshal.load(value)
       end
       return value
     end
