@@ -8,7 +8,7 @@ Caching layer for Adhearsion's Celluloid Actors
 Add to your Adhearsion's app bundle
 
 ```
-gem "ahn\_cache", :git => "git@github.com:/krakatoa/ahn_cache.git"
+gem "ahn_cache", :git => "git@github.com:/krakatoa/ahn_cache.git"
 ```
 
 ## Config file
