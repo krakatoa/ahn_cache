@@ -20,7 +20,7 @@ Caching (per-environment) configuration is stored in **/config/cache.yml**
 ```
 development:
   backend: redis
-  url: 'redis://ivr-db-dev.smrttouch.com:6379/0'
+  url: 'redis://your-redis-host:6379/0'
   ttl: 30
 ```
 
