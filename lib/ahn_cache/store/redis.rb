@@ -6,19 +6,23 @@ module AhnCache
       ttl = options[:ttl] || nil
       value = Marshal.dump(value)
       if ttl
-        @cache.setex key, ttl, value
+        driver.setex key, ttl, value
       else
-        @cache.set key, value
+        driver.set key, value
       end
     end
 
     def read(key)
-      value = @cache.get(key)
+      value = driver.get(key)
       value ? Marshal.load(value) : nil rescue nil
     end
 
+    def clear(key)
+      driver.del key
+    end
+
     def exists?(key)
-      @cache.exists key
+      driver.exists key
     end
 
     def fetch(key, block, options={})
@@ -41,7 +45,7 @@ module AhnCache
       # TODO: redis-rb doesn't connect until needed. Not required to shutdown.
     end
 
-    private
+  private
     def mapped_options(options={})
       options[:ttl] ||= Adhearsion.config.cache.ttl
       options[:force] ||= false

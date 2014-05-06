@@ -12,6 +12,10 @@ module AhnCache
       raise "Not implemented error"
     end
 
+    def clear(key)
+      raise "Not implemented error"
+    end
+
     def read(key)
       raise "Not implemented error"
     end
@@ -24,7 +28,7 @@ module AhnCache
       raise "Not implemented error"
     end
 
-    private
+  private
     def connect_driver
       raise "Not implemented error"
     end
