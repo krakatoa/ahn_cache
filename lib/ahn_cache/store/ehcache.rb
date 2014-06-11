@@ -18,7 +18,7 @@ module AhnCache
     def fetch(key, block, options={})
       transactional = exists?(key)
       driver.acquire_write_lock_on_key(key) if transactional
-      
+
       if !options[:force]
         item = driver.get(key)
 
@@ -42,7 +42,7 @@ module AhnCache
       @cache_manager.shutdown
     end
 
-    private
+  private
     def mapped_options(opts)
       options = {}
       opts[:ttl] ||= Adhearsion.config.cache.ttl
@@ -50,7 +50,7 @@ module AhnCache
       options[:if_absent] = !(opts[:force] || false)
       options
     end
-    
+
     def connect_driver
       @cache_manager = Java::NetSfEhcache::CacheManager.new
       @cache = @cache_manager.cache("adhearsion")

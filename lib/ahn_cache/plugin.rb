@@ -1,7 +1,7 @@
 module AhnCache
   class Plugin < Adhearsion::Plugin
 
-    BACKENDS = [:ehcache]
+    BACKENDS = [:ehcache, :redis]
 
     class << self
       def store_klass(backend)
@@ -22,13 +22,13 @@ module AhnCache
         $stdout.puts "Ahn-Cache config file is missing."
       else
         backend (cache_config["backend"] || "ehcache").to_sym
+        url (cache_config["url"] || nil) # Only for Redis instances
         ttl (cache_config["ttl"] || "unlimited")
       end
     end
 
     init :ahn_cache do
       logger.warn "AhnCache has been loaded"
-
       store_klass(Adhearsion.config.cache.backend).supervise_as(:cache)
     end
 
